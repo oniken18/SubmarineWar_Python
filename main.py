@@ -12,19 +12,19 @@ class WindowLogin:
         def Login(event):
             if self.EntryName.get() == 'Enter name..' or self.EntryPassword.get() == 'Enter Password..':
                 msg = 'fill name and password'
-                popup = tk.messagebox.showinfo(message=msg)
+                tk.messagebox.showinfo(message=msg)
                 return
             PARAMS = {'name': self.EntryName.get(), 'password': self.EntryPassword.get()}
             myURL = 'http://oniken.c1.biz/server/actions/loginUser.php?'
             r = requests.get(url=myURL, params=PARAMS)
-            if r.json() == '0':
+            if r.json() == 0:
                 msg = 'Wrong name or passeord'
-                popup = tk.messagebox.showinfo(message=msg)
+                tk.messagebox.showinfo(message=msg)
                 return
             else:
-                # GameWindow = tk.Toplevel(self.master)
+                MyId = (r.json()[0]['UserId'])
                 self.canvas.destroy()
-                app = WindowGameBoard(self.root)
+                app = WindowGameBoard(self.root,MyId)
 
         def resetName(event):
             if self.EntryName.get() == 'Enter name..':
@@ -79,5 +79,6 @@ class WindowLogin:
         self.butSignUp.place(width=180, x=158, y=240)
 
         self.root.mainloop()
+
 
 Game = WindowLogin()

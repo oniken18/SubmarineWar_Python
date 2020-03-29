@@ -24,7 +24,7 @@ class Box(object):
             PARAMS = {'GameId': self.GB.GameId, 'BoxNm': self.boxID, 'nmMe': self.GB.NmMe}
             myURL = 'http://oniken.c1.biz/server/actions/SendBoxNm.php?'
             requests.get(url=myURL, params=PARAMS)
-            self.GB.SetMyTurn()
+            self.GB.SetMyTurnThread()
 
     def setHit(self):
         self.isChecked = True
