@@ -1,13 +1,10 @@
 import ast
 import json as json
 import threading
-import time
 import tkinter as tk
 from tkinter import messagebox
 import requests
 from PIL import Image, ImageTk
-from TimerClass import RunClock
-
 from BoxClass import Box
 from SubmarineClass import Submarine
 
@@ -31,6 +28,7 @@ class WindowGameBoard:
     timeIsUp = False
     StopClock = False
     isStartPressed = False
+    isGameOver = False
 
     # def RunClock(self):
     #     seconds = 60
@@ -48,6 +46,33 @@ class WindowGameBoard:
     #         self.StopClock = False
     #     else:
     #         self.timeIsUp = True
+
+    def CheckWin(self):
+        isWin = True
+
+        for box in self.boxes:
+            if box.isSubmarine and not box.isChecked:
+                isWin = False
+
+        if isWin:
+            self.isGameOver = True
+            msg = "You Win"
+            tk.messagebox.showinfo(message=msg)
+            print("You Win")
+
+    def CheckOpponentWin(self):
+        isOpWin = True
+
+        for OpBox in self.smallBoxes:
+            if OpBox.isSubmarine and not OpBox.isChecked:
+                isOpWin = False
+
+        if isOpWin:
+            self.isGameOver = True
+            msg = "You Loss"
+            tk.messagebox.showinfo(message=msg)
+            print("You Loss")
+
 
     def CheckOpponent(self):
         PARAMS = {'GameId': self.GameId}
@@ -91,7 +116,7 @@ class WindowGameBoard:
             bx.isSubmarine = False
 
         for nm in self.opponentBoxes:
-            self.boxes[nm -1].isSubmarine = True
+            self.boxes[nm - 1].isSubmarine = True
 
         for sub in self.submarines:
             sub.lblSubmarine.destroy()
@@ -108,16 +133,9 @@ class WindowGameBoard:
 
     def SetMyTurn(self):
         self.MyTurn = False
-        self.lblUserTurn.config(text='')
+        self.lblUserTurn.config(text='Opponent Turn')
         PARAMS = {'GameId': self.GameId, 'NmMe': self.NmMe}
         myURL = 'http://oniken.c1.biz/server/actions/CheckForOpponentHit.php?'
-
-        # if self.ClockThread.is_alive():
-        #     print('THEAD IS ALIVE')
-        # else:
-        #     print('Eitan THREAD NOT ALIVE')
-        #
-        # self.ClockThread.start()
 
         while not self.timeIsUp and not self.MyTurn:
             r = requests.get(url=myURL, params=PARAMS)
@@ -129,7 +147,6 @@ class WindowGameBoard:
                 self.smallBoxes[self.opponentBoxes].setHit()
 
         if not self.MyTurn or self.timeIsUp:
-
             msg = "opponent Left The Game! game canceled"
             popup = tk.messagebox.showinfo(message=msg)
             PARAMS = {'GameId': self.GameId}
@@ -172,7 +189,7 @@ class WindowGameBoard:
                         return
                     self.boxes[int(sub.SubFirstBox + nm)].isSubmarine = True
                     self.BoxesWar.append(int(sub.SubFirstBox + nm))
-        # self.isGameOn = True
+
         self.isStartPressed = True
         self.BoxesJson = json.dumps(self.BoxesWar)
         PARAMS = {'Id': self.MyId, 'SubList': self.BoxesJson}
@@ -191,7 +208,7 @@ class WindowGameBoard:
         else:
             self.GameId = (r.json()[0]['GameId'])
             self.MyTurn = True
-            self.lblUserTurn.config(text='')
+            self.lblUserTurn.config(text='Opponent Turn')
             self.NmOpponent = 2
             self.NmMe = 1
 
@@ -200,14 +217,11 @@ class WindowGameBoard:
 
     def __init__(self, root, myId):
 
-
-        # self.ClockThread = threading.Thread(target=self.RunClock)
-
         def StartGameThread(event):
             thread1 = threading.Thread(target=self.startGame)
             thread1.start()
 
-        load = Image.open(r"C:\Users\Eitan\PycharmProjects\SubmarineWar\Graphics\WhiteArrow.png")
+        load = Image.open(r"Graphics\WhiteArrow.png")
         load.thumbnail(self.size, Image.ANTIALIAS)
         arrowIMG = ImageTk.PhotoImage(load)
 
@@ -218,18 +232,16 @@ class WindowGameBoard:
         self.canvas = tk.Canvas(self.root, width=self.nmWidth, height=self.nmHeight)
         self.canvas.pack()
 
-        self.lblTimer = tk.Label(self.canvas, text='60', bd=1, relief="solid")
-        self.lblTimer.place(width=50, height=25, x=900, y=350)
+        # self.lblTimer = tk.Label(self.canvas, text='60', bd=1, relief="solid")
+        # self.lblTimer.place(width=50, height=25, x=900, y=350)
 
         # self.ClockThread = RunClock(60, self.lblTimer, self)
 
-        self.lblUserTurn = tk.Label(self.canvas,font=("Helvetica", 30), text='', bd=1, relief="solid")
-        self.lblUserTurn.place(width=80, height=50, x=900, y=400)
+        self.lblUserTurn = tk.Label(self.canvas, font=("Helvetica", 24), text='', bd=1, relief="solid")
+        self.lblUserTurn.place(width=150, height=50, x=750, y=400)
 
         self.boardFrame = tk.Frame(self.canvas, bd=2, bg='#DDDDDD')
         self.boardFrame.place(width=604, height=604, x=27, y=27)
-        # boardInfo = int(self.boardFrame.winfo_pointerx()), int(self.boardFrame.winfo_width()), \
-        #             int(self.boardFrame.winfo_pointery()), int(self.boardFrame.winfo_height())
 
         self.butStart = tk.Button(self.canvas, text='Ready To Start')
         self.butStart.bind("<Button-1>", StartGameThread)

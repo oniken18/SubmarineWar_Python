@@ -68,7 +68,7 @@ missing module named numpy - imported by PIL.ImageFilter (optional), pyscreeze (
 missing module named cv2 - imported by pyscreeze (optional)
 missing module named PIL._imagingagg - imported by PIL (delayed, conditional, optional), PIL.ImageDraw (delayed, conditional, optional)
 missing module named cffi - imported by PIL.Image (optional), PIL.PyAccess (top-level), PIL.ImageTk (delayed, conditional, optional)
-missing module named olefile - imported by PIL.FpxImagePlugin (top-level), PIL.MicImagePlugin (top-level)
+missing module named olefile - imported by PIL.MicImagePlugin (top-level), PIL.FpxImagePlugin (top-level)
 missing module named UserDict - imported by PIL.PdfParser (optional)
 missing module named 'PySide.QtCore' - imported by PIL.ImageQt (conditional, optional)
 missing module named 'PyQt4.QtCore' - imported by PIL.ImageQt (conditional, optional)

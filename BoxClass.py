@@ -1,4 +1,5 @@
 import requests
+import tkinter as tk
 
 
 class Box(object):
@@ -18,6 +19,7 @@ class Box(object):
 
             if self.isSubmarine:
                 self.lblBox.config(bg='red')
+                self.GB.CheckWin()
             else:
                 self.lblBox.config(text='X')
 
@@ -30,5 +32,6 @@ class Box(object):
         self.isChecked = True
         if self.isSubmarine:
             self.lblBox.config(bg='Red')
+            self.GB.CheckOpponentWin()
         else:
             self.lblBox.config(text='X')
