@@ -5,6 +5,7 @@ from GameBoard import WindowGameBoard
 
 
 class WindowLogin:
+
     def __init__(self):
         def SignUp():
             x = 1
@@ -22,9 +23,15 @@ class WindowLogin:
                 tk.messagebox.showinfo(message=msg)
                 return
             else:
+
                 MyId = (r.json()[0]['UserId'])
+                self.EntryName.place_forget()
+                self.EntryPassword.place_forget()
+                self.lblTitle.place_forget()
+                self.butLogin.place_forget()
+                self.butSignUp.place_forget()
                 self.canvas.destroy()
-                app = WindowGameBoard(self.root,MyId)
+                app = WindowGameBoard(self.root, MyId)
 
         def resetName(event):
             if self.EntryName.get() == 'Enter name..':

@@ -73,7 +73,6 @@ class WindowGameBoard:
             tk.messagebox.showinfo(message=msg)
             print("You Loss")
 
-
     def CheckOpponent(self):
         PARAMS = {'GameId': self.GameId}
         myURL = 'http://oniken.c1.biz/server/actions/CheckOpponent.php?'
