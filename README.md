@@ -2,7 +2,8 @@
 submarine war game using tkinter
 
 multi-player game of SubmarineWar.
-users Names and pass:
+users Names and pass-
+
 name:Eitan  pass:1
 name:Ilana  pass:1
 
